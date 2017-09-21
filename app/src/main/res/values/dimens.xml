@@ -1,0 +1,20 @@
+<resources>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_medium">14sp</dimen>
+    <dimen name="text_default">16sp</dimen>
+    <dimen name="text_large">18sp</dimen>
+
+    <dimen name="detail_movie_text_size">@dimen/text_default</dimen>
+    <dimen name="detail_movie_title_text_size">@dimen/text_default</dimen>
+    <dimen name="detail_movie_title_margin_bottom">10dp</dimen>
+    <dimen name="detail_movie_padding">8dp</dimen>
+    <dimen name="detail_movie_overview_padding">10dp</dimen>
+    <dimen name="dimen_movie_overview_text_size">@dimen/text_default</dimen>
+    <dimen name="movie_item_root_frame_padding">1dp</dimen>
+    <dimen name="movie_item_root_padding">8dp</dimen>
+    <dimen name="movie_item_title_text_size">@dimen/text_medium</dimen>
+    <dimen name="reviews_author_padding">10dp</dimen>
+    <dimen name="reviews_content_padding_left">30dp</dimen>
+    <dimen name="reviews_content_padding_right">10dp</dimen>
+    <dimen name="reviews_content_padding_bottom">10dp</dimen>
+</resources>

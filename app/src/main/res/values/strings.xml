@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="menu_action_most_popular">Most popular</string>
+    <string name="menu_action_highest_rated">Highest Rated</string>
+    <string name="menu_action_favorite">Favorite</string>
+    <string name="detail_release_date_key">"Release date: "</string>
+    <string name="detail_average_rating_key">"Average rating: "</string>
+    <string name="toast_connection_error">No Internet connection</string>
+    <string name="detail_message_add_favorite">Added to Favorites</string>
+    <string name="detail_message_remove_favorite">Removed from Favorites</string>
+    <string name="detail_videos_label">Video</string>
+    <string name="detail_reviews_label">Reviews</string>
+</resources>
