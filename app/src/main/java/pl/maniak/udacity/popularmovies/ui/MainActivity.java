@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         int width = displayMetrics.widthPixels;
         int nColumns = width / widthDivider;
         if (nColumns < 2) return 2;
-        if (nColumns > 4) return 4;
         return nColumns;
     }
 

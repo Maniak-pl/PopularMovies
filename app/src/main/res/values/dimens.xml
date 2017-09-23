@@ -17,4 +17,6 @@
     <dimen name="reviews_content_padding_left">30dp</dimen>
     <dimen name="reviews_content_padding_right">10dp</dimen>
     <dimen name="reviews_content_padding_bottom">10dp</dimen>
+
+    <item name="aspect_ratio" format="float" type="dimen">.675</item>
 </resources>
