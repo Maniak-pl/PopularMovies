@@ -109,4 +109,9 @@ public class Movie implements Parcelable {
         public List<Movie> movies = new ArrayList<>();
 
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

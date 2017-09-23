@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.maniak.udacity.popularmovies.R;
@@ -14,13 +15,13 @@ import pl.maniak.udacity.popularmovies.model.Movie;
 public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     private final LayoutInflater inflater;
-    private final List<Movie> movieList;
+    private ArrayList<Movie> movieList;
 
     private OnMovieItemClickedListener onClickListener;
 
-    public MovieAdapter(Context context, List<Movie> movieList) {
+    public MovieAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
-        this.movieList = movieList;
+        this.movieList = new ArrayList<>();
     }
 
     @Override
@@ -42,9 +43,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
         return movieList.size();
     }
 
-    public void updateMovie(List<Movie> list) {
-        movieList.clear();
-        movieList.addAll(list);
+    public void updateMovie(ArrayList<Movie> list) {
+        movieList = list;
         notifyDataSetChanged();
     }
 

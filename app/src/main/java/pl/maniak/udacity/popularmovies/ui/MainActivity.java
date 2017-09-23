@@ -7,10 +7,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -30,51 +32,56 @@ import pl.maniak.udacity.popularmovies.ui.movie.MovieAdapter;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieItemClickedListener {
 
-    @BindView(R.id.movies_recycle_view)
     RecyclerView recyclerView;
-
     private MovieAdapter adapter;
-    private int position = 0;
+
     private Sort sort = Sort.POPULAR;
+
+    private ArrayList<Movie> list;
+    private Parcelable state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
-        if(savedInstanceState != null) {
-            sort = (Sort)savedInstanceState.getSerializable(Constants.BUNDLE_SORT);
-			position = savedInstanceState.getInt(Constants.BUNDLE_ITEM_POSITION);
+        if (savedInstanceState != null) {
+            sort = (Sort) savedInstanceState.getSerializable(Constants.BUNDLE_SORT);
+            state = savedInstanceState.getParcelable(Constants.BUNDLE_KEY_STATE);
+            list = savedInstanceState.getParcelableArrayList(Constants.BUNDLE_KEY_MOVIE);
         }
 
         initRecycler();
-        getMovies(sort);
-    }
 
+        if (list == null) {
+            getMovies(sort);
+        } else {
+            updateMovies(list);
+            if (state != null) {
+                recyclerView.getLayoutManager().onRestoreInstanceState(state);
+                log("Restored layout manager");
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState != null) {
-            position = savedInstanceState.getInt(Constants.BUNDLE_ITEM_POSITION);
-            sort = (Sort)savedInstanceState.getSerializable(Constants.BUNDLE_SORT);
+            }
         }
+        log("MainActivity.onCreate() called with: movies = [" + list + "] state = [" + state + "]");
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        position = ((GridLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        outState.putInt(Constants.BUNDLE_ITEM_POSITION, position);
+        outState.putParcelableArrayList(Constants.BUNDLE_KEY_MOVIE, list);
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(Constants.BUNDLE_KEY_STATE, listState);
         outState.putSerializable(Constants.BUNDLE_SORT, sort);
+        super.onSaveInstanceState(outState);
+        log("MainActivity.onSaveInstanceState() called with: movies = [" + list + "]");
     }
 
     void getMovies(Sort sort) {
         this.sort = sort;
-        if(isOnline()) {
-            if(sort == Sort.FAVORITE) {
-             new FavoriteTask(this).execute();
+        if (isOnline()) {
+            if (sort == Sort.FAVORITE) {
+                new FavoriteTask(this).execute();
             } else {
                 new MoviesTask().execute(sort);
             }
@@ -91,11 +98,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     }
 
     private void initRecycler() {
+        recyclerView = (RecyclerView) findViewById(R.id.movies_recycle_view);
+        adapter = new MovieAdapter(this);
+
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns());
-        adapter = new MovieAdapter(this, new ArrayList<Movie>());
+        recyclerView.setLayoutManager(layoutManager);
+
         adapter.setOnClickListener(this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
     }
 
     private int numberOfColumns() {
@@ -152,8 +162,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-            adapter.updateMovie(movies);
-            scrollToPosition();
+            log("MoviesTask.onPostExecute() called with: movies = [" + movies + "]");
+            updateMovies(movies);
         }
     }
 
@@ -190,22 +200,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         }
 
         @Override
-        protected void onPostExecute(List<Movie> list) {
-            if(list != null) {
-                if(adapter != null) {
-                    adapter.updateMovie(list);
-                    scrollToPosition();
-                }
+        protected void onPostExecute(List<Movie> movies) {
+            log("onPostExecute() called with: movies = [" + movies + "]");
+            updateMovies(movies);
+        }
+    }
+
+    private void updateMovies(List<Movie> movies) {
+        if (movies != null) {
+            list = (ArrayList<Movie>) movies;
+            if (adapter != null) {
+                adapter.updateMovie(list);
+
             }
         }
     }
 
-    private void scrollToPosition() {
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.getLayoutManager().scrollToPosition(position);
-            }
-        },400);
+    private static void log(String message) {
+        Log.e("Test", message);
     }
 }
