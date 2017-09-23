@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -20,8 +19,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import pl.maniak.udacity.popularmovies.Constants;
 import pl.maniak.udacity.popularmovies.R;
 import pl.maniak.udacity.popularmovies.api.MovieInvoker;
@@ -59,12 +56,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             updateMovies(list);
             if (state != null) {
                 recyclerView.getLayoutManager().onRestoreInstanceState(state);
-                log("Restored layout manager");
-
             }
         }
-        log("MainActivity.onCreate() called with: movies = [" + list + "] state = [" + state + "]");
-
     }
 
     @Override
@@ -74,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         outState.putParcelable(Constants.BUNDLE_KEY_STATE, listState);
         outState.putSerializable(Constants.BUNDLE_SORT, sort);
         super.onSaveInstanceState(outState);
-        log("MainActivity.onSaveInstanceState() called with: movies = [" + list + "]");
     }
 
     void getMovies(Sort sort) {
@@ -161,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-            log("MoviesTask.onPostExecute() called with: movies = [" + movies + "]");
             updateMovies(movies);
         }
     }
@@ -200,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
-            log("onPostExecute() called with: movies = [" + movies + "]");
             updateMovies(movies);
         }
     }
@@ -210,12 +200,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             list = (ArrayList<Movie>) movies;
             if (adapter != null) {
                 adapter.updateMovie(list);
-
             }
         }
-    }
-
-    private static void log(String message) {
-        Log.e("Test", message);
     }
 }
